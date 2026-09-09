@@ -23,10 +23,12 @@ type Category struct {
 }
 
 type Game struct {
-	ID         int
-	CategoryID int
-	Title      string
-	Price      float64
+	ID           int
+	CategoryID   int
+	CategoryName string
+	Title        string
+	Price        float64
+	CreatedAt    string
 }
 
 type GameKey struct {
