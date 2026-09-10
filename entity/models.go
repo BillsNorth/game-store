@@ -23,10 +23,12 @@ type Category struct {
 }
 
 type Game struct {
-	ID         int
-	CategoryID int
-	Title      string
-	Price      float64
+	ID           int
+	CategoryID   int
+	CategoryName string
+	Title        string
+	Price        float64
+	CreatedAt    string
 }
 
 type GameKey struct {
@@ -36,16 +38,29 @@ type GameKey struct {
 	Status     string
 }
 
+type Cart struct {
+	ID        int
+	UserID    int
+	GameID    int
+	GameTitle string
+	Price     float64
+	Quantity  int
+	CreatedAt string
+}
+
 type Order struct {
-	ID          int
-	UserID      int
-	TotalAmount float64
-	CreatedAt   time.Time
+	ID         int
+	UserID     int
+	TotalPrice float64
+	CreatedAt  string
 }
 
 type OrderDetail struct {
-	ID              int
-	OrderID         int
-	GameKeyID       int
-	PriceAtPurchase float64
+	ID         int
+	OrderID    int
+	GameID     int
+	GameTitle  string
+	GameKeyID  int
+	LicenseKey string
+	Price      float64
 }
