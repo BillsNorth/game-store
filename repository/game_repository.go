@@ -20,7 +20,7 @@ func NewGameRepository(db *sql.DB) GameRepository {
 	return &gameRepository{db: db}
 }
 
-// GetAll mengambil semua daftar game beserta nama kategorinya
+// GetAll take all games from the database and return them as a slice of entity.Game
 func (r *gameRepository) GetAll() ([]entity.Game, error) {
 	query := `
 		SELECT g.id, g.category_id, c.category_name, g.title, g.price
@@ -52,7 +52,7 @@ func (r *gameRepository) GetAll() ([]entity.Game, error) {
 	return games, nil
 }
 
-// GetByID mengambil detail 1 game berdasarkan ID
+// GetByID take the game ID and return the game details along with its category name
 func (r *gameRepository) GetByID(id int) (entity.Game, error) {
 	query := `
 		SELECT g.id, g.category_id, c.category_name, g.title, g.price
@@ -70,7 +70,7 @@ func (r *gameRepository) GetByID(id int) (entity.Game, error) {
 	return g, nil
 }
 
-// GetAvailableKeyCount menghitung sisa stok lisensi game yang masih 'available'
+// GetAvailableKeyCount take the game ID and return the count of available keys for that game
 func (r *gameRepository) GetAvailableKeyCount(gameID int) (int, error) {
 	query := `
 		SELECT COUNT(*) 

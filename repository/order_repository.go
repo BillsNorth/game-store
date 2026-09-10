@@ -56,7 +56,7 @@ func (r *orderRepository) CreateOrderWithTransaction(userID int, cartItems []ent
 	}
 	orderID := int(orderID64)
 
-	// Take care of the order details and game keys
+	// Take each item in the cart and assign a game key to it
 	for _, item := range cartItems {
 		for i := 0; i < item.Quantity; i++ {
 			var keyID int
@@ -75,9 +75,10 @@ func (r *orderRepository) CreateOrderWithTransaction(userID int, cartItems []ent
 				return 0, err
 			}
 
+			// Catat ke order_details (Ubah price jadi price_at_purchase)
 			_, err = tx.Exec(
-				`INSERT INTO order_details (order_id, game_id, game_key_id, price) VALUES (?, ?, ?, ?)`,
-				orderID, item.GameID, keyID, item.Price,
+				`INSERT INTO order_details (order_id, game_key_id, price_at_purchase) VALUES (?, ?, ?)`,
+				orderID, keyID, item.Price,
 			)
 			if err != nil {
 				return 0, err

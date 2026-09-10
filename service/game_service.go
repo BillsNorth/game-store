@@ -6,7 +6,7 @@ import (
 	"game-store/repository"
 )
 
-// GameWithStock memuat detail game beserta jumlah stok lisensinya
+// GameWithStock holds the game details along with its available stock
 type GameWithStock struct {
 	Game  entity.Game
 	Stock int
@@ -26,7 +26,7 @@ func NewGameService(gameRepo repository.GameRepository) GameService {
 	return &gameService{gameRepo: gameRepo}
 }
 
-// GetAllGames mengambil semua game beserta jumlah stoknya masing-masing
+// GetAllGames take all games from the database and return them as a slice of GameWithStock
 func (s *gameService) GetAllGames() ([]GameWithStock, error) {
 	games, err := s.gameRepo.GetAll()
 	if err != nil {
@@ -49,7 +49,7 @@ func (s *gameService) GetAllGames() ([]GameWithStock, error) {
 	return result, nil
 }
 
-// GetGameByID mengambil detail 1 game beserta stoknya
+// GetGameByID take the game ID and return the game details along with its category name and available stock
 func (s *gameService) GetGameByID(id int) (GameWithStock, error) {
 	if id <= 0 {
 		return GameWithStock{}, errors.New("ID game tidak valid")
