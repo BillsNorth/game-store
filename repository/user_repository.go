@@ -8,6 +8,7 @@ import (
 type UserRepository interface {
 	Register(user entity.User, profile entity.UserProfile) error
 	FindByEmail(email string) (entity.User, error)
+	TopUpBalance(userID int, amount float64) error
 }
 
 type userRepository struct {
@@ -55,4 +56,10 @@ func (r *userRepository) FindByEmail(email string) (entity.User, error) {
 		return user, err
 	}
 	return user, nil
+}
+
+func (r *userRepository) TopUpBalance(userID int, amount float64) error {
+	query := `UPDATE user_profiles SET wallet_balance = wallet_balance + ? WHERE user_id = ?`
+	_, err := r.db.Exec(query, amount, userID)
+	return err
 }
