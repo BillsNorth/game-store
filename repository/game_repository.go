@@ -9,6 +9,7 @@ type GameRepository interface {
 	GetAll() ([]entity.Game, error)
 	GetByID(id int) (entity.Game, error)
 	GetAvailableKeyCount(gameID int) (int, error)
+	AddGameKey(gameID int, licenseKey string) error
 }
 
 type gameRepository struct {
@@ -84,4 +85,10 @@ func (r *gameRepository) GetAvailableKeyCount(gameID int) (int, error) {
 	}
 
 	return count, nil
+}
+
+func (r *gameRepository) AddGameKey(gameID int, licenseKey string) error {
+	query := `INSERT INTO game_keys (game_id, license_key, status) VALUES (?, ?, 'available')`
+	_, err := r.db.Exec(query, gameID, licenseKey)
+	return err
 }
