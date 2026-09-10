@@ -15,6 +15,7 @@ type GameWithStock struct {
 type GameService interface {
 	GetAllGames() ([]GameWithStock, error)
 	GetGameByID(id int) (GameWithStock, error)
+	AddKey(gameID int, licenseKey string) error
 }
 
 type gameService struct {
@@ -68,4 +69,11 @@ func (s *gameService) GetGameByID(id int) (GameWithStock, error) {
 		Game:  game,
 		Stock: stock,
 	}, nil
+}
+
+func (s *gameService) AddKey(gameID int, licenseKey string) error {
+	if licenseKey == "" {
+		return errors.New("license key tidak boleh kosong")
+	}
+	return s.gameRepo.AddGameKey(gameID, licenseKey)
 }
