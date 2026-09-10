@@ -19,10 +19,10 @@ func NewGameRepository(db *sql.DB) GameRepository {
 	return &gameRepository{db: db}
 }
 
-// GetAll retrieves the entire list of games along with their respective names.
+// GetAll mengambil semua daftar game beserta nama kategorinya
 func (r *gameRepository) GetAll() ([]entity.Game, error) {
 	query := `
-		SELECT g.id, g.category_id, c.category_name, g.title, g.price, g.created_at
+		SELECT g.id, g.category_id, c.category_name, g.title, g.price
 		FROM games g
 		JOIN categories c ON g.category_id = c.id
 		ORDER BY g.id ASC
@@ -37,7 +37,7 @@ func (r *gameRepository) GetAll() ([]entity.Game, error) {
 	var games []entity.Game
 	for rows.Next() {
 		var g entity.Game
-		err := rows.Scan(&g.ID, &g.CategoryID, &g.CategoryName, &g.Title, &g.Price, &g.CreatedAt)
+		err := rows.Scan(&g.ID, &g.CategoryID, &g.CategoryName, &g.Title, &g.Price)
 		if err != nil {
 			return nil, err
 		}
@@ -51,17 +51,17 @@ func (r *gameRepository) GetAll() ([]entity.Game, error) {
 	return games, nil
 }
 
-// GetByID retrieves the details of a single game based on its ID.
+// GetByID mengambil detail 1 game berdasarkan ID
 func (r *gameRepository) GetByID(id int) (entity.Game, error) {
 	query := `
-		SELECT g.id, g.category_id, c.category_name, g.title, g.price, g.created_at
+		SELECT g.id, g.category_id, c.category_name, g.title, g.price
 		FROM games g
 		JOIN categories c ON g.category_id = c.id
 		WHERE g.id = ?
 	`
 
 	var g entity.Game
-	err := r.db.QueryRow(query, id).Scan(&g.ID, &g.CategoryID, &g.CategoryName, &g.Title, &g.Price, &g.CreatedAt)
+	err := r.db.QueryRow(query, id).Scan(&g.ID, &g.CategoryID, &g.CategoryName, &g.Title, &g.Price)
 	if err != nil {
 		return g, err
 	}
@@ -69,7 +69,7 @@ func (r *gameRepository) GetByID(id int) (entity.Game, error) {
 	return g, nil
 }
 
-// GetAvailableKeyCount calculates the remaining stock of game licenses that are still 'available'.
+// GetAvailableKeyCount menghitung sisa stok lisensi game yang masih 'available'
 func (r *gameRepository) GetAvailableKeyCount(gameID int) (int, error) {
 	query := `
 		SELECT COUNT(*) 
