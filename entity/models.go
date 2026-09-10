@@ -49,10 +49,10 @@ type Cart struct {
 }
 
 type Order struct {
-	ID          int
-	UserID      int
-	TotalAmount float64
-	CreatedAt   string
+	ID         int
+	UserID     int
+	TotalPrice float64
+	CreatedAt  string
 }
 
 type OrderDetail struct {
