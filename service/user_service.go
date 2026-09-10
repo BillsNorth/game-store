@@ -9,6 +9,7 @@ import (
 type UserService interface {
 	Register(email, password, fullName string) error
 	Login(email, password string) (entity.User, error)
+	TopUp(userID int, amount float64) error
 }
 
 type userService struct {
@@ -65,4 +66,11 @@ func (s *userService) Login(email, password string) (entity.User, error) {
 	}
 
 	return user, nil
+}
+
+func (s *userService) TopUp(userID int, amount float64) error {
+	if amount <= 0 {
+		return errors.New("nominal top-up harus lebih dari 0")
+	}
+	return s.userRepo.TopUpBalance(userID, amount)
 }
