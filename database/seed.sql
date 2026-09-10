@@ -13,10 +13,10 @@ TRUNCATE TABLE users;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- Seed Users 
--- Admin: admin@store.com | Password: admin123
+-- Admin: admin@gamestore.com | Password: admin123
 -- Customer: buyer@gmail.com | Password: password123
 INSERT INTO users (id, email, password, role) VALUES
-(1, 'admin@store.com', 'admin123', 'admin'),
+(1, 'admin@gamestore.com', 'admin123', 'admin'),
 (2, 'buyer@gmail.com', 'password123', 'customer');
 
 -- Seed User Profiles
