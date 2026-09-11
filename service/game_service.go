@@ -4,7 +4,10 @@ import (
 	"errors"
 	"game-store/entity"
 	"game-store/repository"
+	"regexp"
 )
+
+var licenseKeyPattern = regexp.MustCompile(`^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$`)
 
 // GameWithStock holds the game details along with its available stock
 type GameWithStock struct {
@@ -74,6 +77,9 @@ func (s *gameService) GetGameByID(id int) (GameWithStock, error) {
 func (s *gameService) AddKey(gameID int, licenseKey string) error {
 	if licenseKey == "" {
 		return errors.New("license key tidak boleh kosong")
+	}
+	if !licenseKeyPattern.MatchString(licenseKey) {
+		return errors.New("format license key tidak valid, gunakan format XXXX-YYYY-ZZZZ")
 	}
 	return s.gameRepo.AddGameKey(gameID, licenseKey)
 }
