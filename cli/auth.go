@@ -25,7 +25,7 @@ func NewAuthCLI(userHandler *handler.UserHandler, scanner *bufio.Scanner) *AuthC
 func (a *AuthCLI) ShowAuthMenu() (*entity.User, bool) {
 	for {
 		fmt.Println("\n=================================")
-		fmt.Println("     WELCOME TO GAME STORE CLI   ")
+		fmt.Println("     WELCOME TO GG Store   ")
 		fmt.Println("=================================")
 		fmt.Println("1. Login")
 		fmt.Println("2. Register")
@@ -46,7 +46,7 @@ func (a *AuthCLI) ShowAuthMenu() (*entity.User, bool) {
 			a.showRegisterMenu()
 
 		case "3":
-			fmt.Println("Terima kasih telah menggunakan Game Store CLI!")
+			fmt.Println("Terima kasih telah menggunakan GG Store")
 			return nil, false
 
 		default:
