@@ -121,10 +121,10 @@ func (r *orderRepository) GetOrdersByUserID(userID int) ([]entity.Order, error) 
 
 func (r *orderRepository) GetOrderDetailsByOrderID(orderID int) ([]entity.OrderDetail, error) {
 	query := `
-		SELECT od.id, od.order_id, od.game_id, g.title, od.game_key_id, gk.license_key, od.price
+		SELECT od.id, od.order_id, g.id, g.title, od.game_key_id, gk.license_key, od.price_at_purchase
 		FROM order_details od
-		JOIN games g ON od.game_id = g.id
 		JOIN game_keys gk ON od.game_key_id = gk.id
+		JOIN games g ON gk.game_id = g.id
 		WHERE od.order_id = ?
 	`
 	rows, err := r.db.Query(query, orderID)
