@@ -1,11 +1,7 @@
 package handler
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
 
 	"game-store/service"
 )
@@ -62,22 +58,10 @@ func (h *OrderHandler) ShowOrders(userID int) {
 }
 
 // Detail order
-func (h *OrderHandler) ShowOrderDetail() {
-	reader := bufio.NewReader(os.Stdin)
-
+func (h *OrderHandler) ShowOrderDetail(userID int) {
 	fmt.Println("\n========== DETAIL ORDER ==========")
 
-	fmt.Print("Order ID: ")
-	input, _ := reader.ReadString('\n')
-	input = strings.TrimSpace(input)
-
-	orderID, err := strconv.Atoi(input)
-	if err != nil {
-		fmt.Println("Order ID harus berupa angka.")
-		return
-	}
-
-	details, err := h.orderService.GetOrderDetails(orderID)
+	details, err := h.orderService.GetOrderDetailsByUserID(userID)
 
 	if err != nil {
 		fmt.Println("Gagal mengambil detail order:", err)
@@ -85,13 +69,18 @@ func (h *OrderHandler) ShowOrderDetail() {
 	}
 
 	if len(details) == 0 {
-		fmt.Println("Detail order tidak ditemukan.")
+		fmt.Println("Kamu belum pernah melakukan pemesanan.")
 		return
 	}
 
+	currentOrderID := -1
 	for _, detail := range details {
+		if detail.OrderID != currentOrderID {
+			currentOrderID = detail.OrderID
+			fmt.Printf("\nOrder ID: %d\n", currentOrderID)
+		}
 		fmt.Printf(
-			"Game: %s | Key: %s | Harga: Rp%.0f\n",
+			"  Game: %s | Key: %s | Harga: Rp%.0f\n",
 			detail.GameTitle,
 			detail.LicenseKey,
 			detail.Price,

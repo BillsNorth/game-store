@@ -116,7 +116,7 @@ func (c *CustomerCLI) handleShowOrders() {
 
 // handleShowOrderDetail displays details of a specific order
 func (c *CustomerCLI) handleShowOrderDetail() {
-	c.orderHandler.ShowOrderDetail()
+	c.orderHandler.ShowOrderDetail(c.userID)
 }
 
 // handleTopUp handles wallet top-up

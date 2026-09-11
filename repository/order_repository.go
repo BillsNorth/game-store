@@ -9,7 +9,7 @@ import (
 type OrderRepository interface {
 	CreateOrderWithTransaction(userID int, cartItems []entity.Cart, grandTotal float64) (int, error)
 	GetOrdersByUserID(userID int) ([]entity.Order, error)
-	GetOrderDetailsByOrderID(orderID int) ([]entity.OrderDetail, error)
+	GetOrderDetailsByUserID(userID int) ([]entity.OrderDetail, error)
 }
 
 type orderRepository struct {
@@ -119,15 +119,17 @@ func (r *orderRepository) GetOrdersByUserID(userID int) ([]entity.Order, error) 
 	return orders, rows.Err()
 }
 
-func (r *orderRepository) GetOrderDetailsByOrderID(orderID int) ([]entity.OrderDetail, error) {
+func (r *orderRepository) GetOrderDetailsByUserID(userID int) ([]entity.OrderDetail, error) {
 	query := `
 		SELECT od.id, od.order_id, g.id, g.title, od.game_key_id, gk.license_key, od.price_at_purchase
 		FROM order_details od
+		JOIN orders o ON od.order_id = o.id
 		JOIN game_keys gk ON od.game_key_id = gk.id
 		JOIN games g ON gk.game_id = g.id
-		WHERE od.order_id = ?
+		WHERE o.user_id = ?
+		ORDER BY od.order_id DESC
 	`
-	rows, err := r.db.Query(query, orderID)
+	rows, err := r.db.Query(query, userID)
 	if err != nil {
 		return nil, err
 	}
