@@ -87,3 +87,34 @@ func (h *OrderHandler) ShowOrderDetail(userID int) {
 		)
 	}
 }
+
+func (h *OrderHandler) ShowAllOrderDetail() {
+	fmt.Println("\n========== ALL ORDER ==========")
+
+	details, err := h.orderService.GetAllOrderDetails()
+
+	if err != nil {
+		fmt.Println("Gaga mengambil detail order:", err)
+		return
+	}
+
+	if len(details) == 0 {
+		fmt.Println("Belum ada yang membeli lisensi game")
+	}
+
+	currentOrderID := -1
+	for _, detail := range details {
+		if detail.OrderID != currentOrderID {
+			currentOrderID = detail.OrderID
+			fmt.Printf("\nOrder ID: %v | DATE BUY: %s | Buyer: %s \n", detail.OrderID, detail.DateBuy, detail.Buyer)
+		}
+
+		fmt.Printf(
+			"             Game: %s | Key: %s | Harga: Rp%.0f\n",
+			detail.Title,
+			detail.LicenseKey,
+			detail.PriceAtPurchase,
+		)
+	}
+
+}
