@@ -10,18 +10,20 @@ import (
 )
 
 type AdminCLI struct {
-	gameHandler *handler.GameHandler
-	gameService service.GameService
-	scanner     *bufio.Scanner
-	userEmail   string
+	gameHandler  *handler.GameHandler
+	gameService  service.GameService
+	scanner      *bufio.Scanner
+	userEmail    string
+	orderHandler *handler.OrderHandler
 }
 
-func NewAdminCLI(gameHandler *handler.GameHandler, gameService service.GameService, scanner *bufio.Scanner, userEmail string) *AdminCLI {
+func NewAdminCLI(gameHandler *handler.GameHandler, gameService service.GameService, scanner *bufio.Scanner, userEmail string, orderHandler *handler.OrderHandler) *AdminCLI {
 	return &AdminCLI{
-		gameHandler: gameHandler,
-		gameService: gameService,
-		scanner:     scanner,
-		userEmail:   userEmail,
+		gameHandler:  gameHandler,
+		gameService:  gameService,
+		scanner:      scanner,
+		userEmail:    userEmail,
+		orderHandler: orderHandler,
 	}
 }
 
@@ -33,7 +35,8 @@ func (a *AdminCLI) ShowMenu() bool {
 		fmt.Println("=================================")
 		fmt.Println("1. Lihat Katalog Game")
 		fmt.Println("2. Tambah Stok Game Key Baru")
-		fmt.Println("3. Logout")
+		fmt.Println("3. Lihat semua penjualan")
+		fmt.Println("4. Logout")
 		fmt.Print("Pilih menu: ")
 
 		a.scanner.Scan()
@@ -45,8 +48,9 @@ func (a *AdminCLI) ShowMenu() bool {
 
 		case "2":
 			a.handleAddGameKey()
-
 		case "3":
+			a.handleShowAllOrder()
+		case "4":
 			fmt.Println("\n[Sukses] Berhasil logout.")
 			return false
 
@@ -78,4 +82,8 @@ func (a *AdminCLI) handleAddGameKey() {
 	} else {
 		fmt.Println("\n[Sukses] Key lisensi baru berhasil ditambahkan!")
 	}
+}
+
+func (a *AdminCLI) handleShowAllOrder() {
+	a.orderHandler.ShowAllOrderDetail()
 }

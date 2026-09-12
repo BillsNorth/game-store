@@ -50,7 +50,7 @@ func (cli *CLI) Start() {
 
 		// Handle menu based on user role
 		if user.Role == "admin" {
-			adminCLI := NewAdminCLI(cli.gameHandler, cli.gameService, cli.scanner, user.Email)
+			adminCLI := NewAdminCLI(cli.gameHandler, cli.gameService, cli.scanner, user.Email, cli.orderHandler)
 			if !adminCLI.ShowMenu() {
 				// Logout, go back to auth menu
 				continue

@@ -10,6 +10,7 @@ type OrderService interface {
 	Checkout(userID int) (int, error)
 	GetUserOrders(userID int) ([]entity.Order, error)
 	GetOrderDetailsByUserID(userID int) ([]entity.OrderDetail, error)
+	GetAllOrderDetails() ([]entity.AllOrderDetail, error)
 }
 
 type orderService struct {
@@ -51,4 +52,7 @@ func (s *orderService) GetUserOrders(userID int) ([]entity.Order, error) {
 
 func (s *orderService) GetOrderDetailsByUserID(userID int) ([]entity.OrderDetail, error) {
 	return s.orderRepo.GetOrderDetailsByUserID(userID)
+}
+func (s *orderService) GetAllOrderDetails() ([]entity.AllOrderDetail, error) {
+	return s.orderRepo.GetAllOrderDetails()
 }

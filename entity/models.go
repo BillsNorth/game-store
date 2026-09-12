@@ -1,6 +1,8 @@
 package entity
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
 	ID        int
@@ -63,4 +65,14 @@ type OrderDetail struct {
 	GameKeyID  int
 	LicenseKey string
 	Price      float64
+}
+
+type AllOrderDetail struct {
+	OrderID         int
+	DateBuy         string
+	Buyer           string
+	Title           string
+	GameKeyID       int
+	LicenseKey      string
+	PriceAtPurchase float64
 }

@@ -1,15 +1,18 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"game-store/entity"
+	"log"
 )
 
 type OrderRepository interface {
 	CreateOrderWithTransaction(userID int, cartItems []entity.Cart, grandTotal float64) (int, error)
 	GetOrdersByUserID(userID int) ([]entity.Order, error)
 	GetOrderDetailsByUserID(userID int) ([]entity.OrderDetail, error)
+	GetAllOrderDetails() ([]entity.AllOrderDetail, error)
 }
 
 type orderRepository struct {
@@ -144,4 +147,62 @@ func (r *orderRepository) GetOrderDetailsByUserID(userID int) ([]entity.OrderDet
 		details = append(details, d)
 	}
 	return details, rows.Err()
+}
+
+func (r *orderRepository) GetAllOrderDetails() ([]entity.AllOrderDetail, error) {
+
+	rows, err := r.db.QueryContext(
+		context.TODO(),
+		`
+		SELECT o.id AS id,o.created_at AS date_buy, up.full_name AS buyer, g.title, od.game_key_id, gk.license_key, od.price_at_purchase
+		FROM order_details od
+			JOIN orders o ON od.order_id = o.id
+			JOIN game_keys gk ON od.game_key_id = gk.id
+			JOIN games g ON gk.game_id = g.id
+			JOIN user_profiles up ON up.user_id = o.user_id
+		ORDER BY date_buy DESC
+		`,
+	)
+
+	// check if any error
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	// close rows after function finished
+	defer rows.Close()
+
+	// prepare temp []var
+	var details []entity.AllOrderDetail
+
+	// iterate each row
+	for rows.Next() {
+
+		var d entity.AllOrderDetail
+
+		if err := rows.Scan(
+			&d.OrderID,
+			&d.DateBuy,
+			&d.Buyer,
+			&d.Title,
+			&d.GameKeyID,
+			&d.LicenseKey,
+			&d.PriceAtPurchase,
+		); err != nil {
+			log.Println(err)
+			return nil, err
+		}
+
+		// add data to slice
+		details = append(details, d)
+	}
+
+	// check error while iterating rows
+	if err := rows.Err(); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return details, nil
 }
